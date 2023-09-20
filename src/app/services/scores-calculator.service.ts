@@ -67,7 +67,9 @@ export class ScoresCalculatorService {
     const rounds = [];
 
     let throwId = 0;
-    let isFinalRound = false;
+
+    let isFinalRound;
+    let throwIsStrike;
 
     for (let i = 0; i < 10; i++) {
       const round = { scores: [] } as Round;
@@ -79,23 +81,24 @@ export class ScoresCalculatorService {
       if (isFinalRound) {
         round.scores.push(scores[throwId + 1]);
 
-        // TODO
-        const firstThrowIsStrike = scores[throwId] === 10;
-        // const secondThrowIsStrike = scores[throwId + 1] === 10;
+        throwIsStrike = scores[throwId] === 10;
         const throwsAreSpare = scores[throwId] + scores[throwId + 1] === 10;
 
-        if (firstThrowIsStrike || throwsAreSpare) {
+        if (throwIsStrike || throwsAreSpare) {
           round.scores.push(scores[throwId + 2]);
         }
       } else {
-        const throwIsStrike = scores[throwId] === 10;
+        throwIsStrike = scores[throwId] === 10;
 
         if (!throwIsStrike) {
           round.scores.push(scores[throwId + 1]);
+
+          throwId += 1;
         }
       }
 
       rounds.push(round);
+
       throwId += 1;
     }
 
@@ -120,15 +123,6 @@ export class ScoresCalculatorService {
       throwsAreSpare = !throwIsStrike && roundScore === 10;
 
       if (!isFinalRound) {
-        if (throwIsStrike) {
-          if (player.rounds[i + 1].scores.length > 1) {
-            roundScore += player.rounds[i + 1].scores[0];
-            roundScore += player.rounds[i + 1].scores[1];
-          }
-        } else if (throwsAreSpare) {
-          roundScore += player.rounds[i + 1].scores[0];
-        }
-
         if (throwIsStrike || throwsAreSpare) {
           roundScore += player.rounds[i + 1].scores[0];
 
@@ -145,37 +139,4 @@ export class ScoresCalculatorService {
       player.rounds[i].totalScore = player.totalScore;
     }
   }
-
-  // private calculateTotalScore(scores: number[]): number {
-  //   let totalScore = 0;
-
-  //   // ERROR
-  //   if (scores.length <= 21) {
-  //     for (let i = 0; i < scores.length; i++) {
-  //       scores[i];
-
-  //       // STRIKE
-  //       if (scores[i] === 10) {
-  //         totalScore += 10;
-
-  //         if (i + 2 < scores.length) {
-  //           totalScore += scores[i + 1];
-  //           totalScore += scores[i + 2];
-  //         }
-  //       }
-
-  //       if (i + 1 < scores.length && scores[i] + scores[i + 1] === 10) {
-  //         // scores[]
-  //       }
-
-  //       if (scores[i])
-  //         if (i + 1 < scores.length) {
-  //           // scores[]
-  //         }
-  //       console.log(scores[i]);
-  //     }
-  //   }
-
-  //   return totalScore;
-  // }
 }
