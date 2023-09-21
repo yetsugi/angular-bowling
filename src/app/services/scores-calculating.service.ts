@@ -6,8 +6,8 @@ import { Round } from '../models/round';
 @Injectable({
   providedIn: 'root',
 })
-export class ScoresCalculatorService {
-  playersScores = new BehaviorSubject<Player[] | null>(null);
+export class ScoresCalculatingService {
+  players = new BehaviorSubject<Player[] | null>(null);
 
   private readonly fileReader = new FileReader();
 
@@ -22,7 +22,7 @@ export class ScoresCalculatorService {
   }
 
   clearScores(): void {
-    this.playersScores.next(null);
+    this.players.next(null);
   }
 
   private loadFile = (): void => {
@@ -58,7 +58,7 @@ export class ScoresCalculatorService {
 
         console.log(players);
 
-        this.playersScores.next(players);
+        this.players.next(players);
       }
     }
   };

@@ -4,8 +4,13 @@
   <h2>Add bowling scores file</h2>
   <app-scores-input (change)="handleScoresInput($event)" />
 
-  <app-scores-table
-    *ngIf="playersScores$ | async as playersScores"
-    [players]="playersScores"
-  />
+  <div *ngIf="players$ | async as players; else error">
+    <h2>Players scores</h2>
+
+    <app-scores-table [players]="players" />
+  </div>
+
+  <ng-template #error>
+    <p>Failed to load provided file..</p>
+  </ng-template>
 </main>

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScoresInputComponent } from './components/scores-input/scores-input.component';
-import { ScoresCalculatorService } from './services/scores-calculator.service';
+import { ScoresCalculatingService } from './services/scores-calculating.service';
 import { ScoresTableComponent } from './components/scores-table/scores-table.component';
 
 @Component({
@@ -12,16 +12,16 @@ import { ScoresTableComponent } from './components/scores-table/scores-table.com
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  private readonly scoresCalculatorService = inject(ScoresCalculatorService);
-  playersScores$ = this.scoresCalculatorService.playersScores;
+  private readonly scoresCalculatingService = inject(ScoresCalculatingService);
+  players$ = this.scoresCalculatingService.players;
 
   handleScoresInput(event: Event): void {
     const files = (event.target as HTMLInputElement).files!;
 
     if (files.length !== 0) {
-      this.scoresCalculatorService.calculateScores(files[0]);
+      this.scoresCalculatingService.calculateScores(files[0]);
     } else {
-      this.scoresCalculatorService.clearScores();
+      this.scoresCalculatingService.clearScores();
     }
 
     console.log((event.target as HTMLInputElement).files);
