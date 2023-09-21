@@ -8,6 +8,7 @@ import { Round } from '../models/round';
 })
 export class ScoresCalculatingService {
   players = new BehaviorSubject<Player[] | null>(null);
+  parseErrorMsg = new BehaviorSubject<string | null>(null);
 
   private readonly fileReader = new FileReader();
 
@@ -17,6 +18,7 @@ export class ScoresCalculatingService {
 
   calculateScores(scoresFile: File): void {
     this.clearScores();
+    this.clearErrorMsg();
 
     this.fileReader.readAsText(scoresFile);
   }
@@ -25,40 +27,63 @@ export class ScoresCalculatingService {
     this.players.next(null);
   }
 
+  clearErrorMsg(): void {
+    this.parseErrorMsg.next(null);
+  }
+
   private loadFile = (): void => {
     const result = (this.fileReader!.result as string).trim();
 
-    console.log(result);
+    try {
+      if (result.length === 0) {
+        throw new Error('File is empty.');
+      }
 
-    // ERROR
-    if (result.length !== 0) {
-      // WARNING: WINDOWS SPECIFIC
       const rows = result.split('\r\n');
       const names = rows.filter((row, i) => i % 2 === 0);
       const scores = rows.filter((row, i) => i % 2 !== 0);
 
-      console.log(names, scores);
+      if (names.length !== scores.length) {
+        throw new Error("Players count doesn't match scores count.");
+      }
 
-      // ERROR
-      if (names.length === scores.length) {
-        const players = [] as Player[];
-        let tmpScores;
+      const players = [] as Player[];
+      let tmpScores;
 
-        for (let i = 0; i < names.length; i++) {
-          tmpScores = scores[i].split(',').map((score) => Number(score));
+      for (let i = 0; i < names.length; i++) {
+        tmpScores = scores[i].split(',').map((score) => Number(score));
 
-          players.push({
-            name: names[i].trim(),
-            rounds: this.convertToRounds(tmpScores),
-            totalScore: 0,
-          });
+        if (tmpScores.length < 12) {
+          throw new Error('Scores are missing.');
         }
 
-        players.forEach((player) => this.calculatePlayerTotalScore(player));
+        if (tmpScores.length > 21) {
+          throw new Error('Too many scores.');
+        }
 
-        console.log(players);
+        if (tmpScores.some((score) => isNaN(score))) {
+          throw new Error('Invalid scores format.');
+        }
 
-        this.players.next(players);
+        players.push({
+          name: names[i].trim(),
+          rounds: this.convertToRounds(tmpScores),
+          totalScore: 0,
+        });
+      }
+
+      players.forEach((player) => this.calculatePlayerTotalScore(player));
+
+      if (players.some((player) => isNaN(player.totalScore))) {
+        throw new Error('Calculation error.');
+      }
+
+      this.players.next(players);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.parseErrorMsg.next(error.message);
+      } else {
+        this.parseErrorMsg.next('Failed to load provided file..');
       }
     }
   };

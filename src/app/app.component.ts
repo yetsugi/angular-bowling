@@ -13,7 +13,9 @@ import { ScoresTableComponent } from './components/scores-table/scores-table.com
 })
 export class AppComponent {
   private readonly scoresCalculatingService = inject(ScoresCalculatingService);
+
   players$ = this.scoresCalculatingService.players;
+  parseErrorMsg$ = this.scoresCalculatingService.parseErrorMsg;
 
   handleScoresInput(event: Event): void {
     const files = (event.target as HTMLInputElement).files!;
@@ -22,8 +24,7 @@ export class AppComponent {
       this.scoresCalculatingService.calculateScores(files[0]);
     } else {
       this.scoresCalculatingService.clearScores();
+      this.scoresCalculatingService.clearErrorMsg();
     }
-
-    console.log((event.target as HTMLInputElement).files);
   }
 }
