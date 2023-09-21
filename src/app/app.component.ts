@@ -9,7 +9,6 @@ import { ScoresTableComponent } from './components/scores-table/scores-table.com
   standalone: true,
   imports: [CommonModule, ScoresInputComponent, ScoresTableComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   private readonly scoresCalculatingService = inject(ScoresCalculatingService);
