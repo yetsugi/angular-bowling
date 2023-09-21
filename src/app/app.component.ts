@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScoresInputComponent } from './components/scores-input/scores-input.component';
 import { ScoresCalculatorService } from './services/scores-calculator.service';
+import { ScoresTableComponent } from './components/scores-table/scores-table.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ScoresInputComponent],
+  imports: [CommonModule, ScoresInputComponent, ScoresTableComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })

@@ -1,0 +1,42 @@
+<table class="scores-table">
+  <thead>
+    <tr>
+      <th class="scores-table__th">Player</th>
+      <th class="scores-table__th">Total score</th>
+      <th *ngFor="let round of rounds" class="scores-table__th">
+        {{ round }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let player of players">
+      <td class="scores-table__td">{{ player.name }}</td>
+      <td class="scores-table__td">
+        {{ player.totalScore }}
+      </td>
+      <td
+        *ngFor="let round of player.rounds"
+        class="scores-table__td scores-table__td--round"
+      >
+        <table class="round-scores-table">
+          <tr>
+            <td
+              *ngFor="let score of round.scores"
+              class="round-scores-table__td"
+            >
+              {{ score }}
+            </td>
+          </tr>
+          <tr>
+            <td
+              [attr.colspan]="round.scores.length"
+              class="round-scores-table__td"
+            >
+              {{ round.totalScore }}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

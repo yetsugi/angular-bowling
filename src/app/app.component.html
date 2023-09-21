@@ -4,7 +4,8 @@
   <h2>Add bowling scores file</h2>
   <app-scores-input (change)="handleScoresInput($event)" />
 
-  <div  *ngIf="playersScores$ | async as playersScores">
-    SCORES
-  </div>
+  <app-scores-table
+    *ngIf="playersScores$ | async as playersScores"
+    [players]="playersScores"
+  />
 </main>

@@ -1,0 +1,27 @@
+.scores-table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.scores-table__th,
+.scores-table__td {
+  padding: 0;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.scores-table__td--round {
+  border: none;
+}
+
+.round-scores-table {
+  text-align: center;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.round-scores-table__td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}

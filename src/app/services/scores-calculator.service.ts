@@ -9,23 +9,23 @@ import { Round } from '../models/round';
 export class ScoresCalculatorService {
   playersScores = new BehaviorSubject<Player[] | null>(null);
 
-  private fileReader: FileReader | undefined;
+  private readonly fileReader = new FileReader();
 
-  calculateScores(scoresFile: File) {
+  constructor() {
+    this.fileReader.onload = this.loadFile;
+  }
+
+  calculateScores(scoresFile: File): void {
     this.clearScores();
-
-    this.fileReader = new FileReader();
-
-    this.fileReader.addEventListener('load', this.loadFile);
 
     this.fileReader.readAsText(scoresFile);
   }
 
-  clearScores() {
+  clearScores(): void {
     this.playersScores.next(null);
   }
 
-  private loadFile = () => {
+  private loadFile = (): void => {
     const result = (this.fileReader!.result as string).trim();
 
     console.log(result);
@@ -105,7 +105,7 @@ export class ScoresCalculatorService {
     return rounds;
   }
 
-  private calculatePlayerTotalScore(player: Player) {
+  private calculatePlayerTotalScore(player: Player): void {
     let isFinalRound;
     let throwIsStrike;
     let throwsAreSpare;
