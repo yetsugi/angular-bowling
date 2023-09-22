@@ -17,13 +17,13 @@ export class ScoresCalculatingService {
   }
 
   calculateScores(scoresFile: File): void {
-    this.clearScores();
+    this.clearPlayers();
     this.clearErrorMsg();
 
     this.fileReader.readAsText(scoresFile);
   }
 
-  clearScores(): void {
+  clearPlayers(): void {
     this.players.next(null);
   }
 
@@ -39,7 +39,9 @@ export class ScoresCalculatingService {
         throw new Error('File is empty.');
       }
 
+      // Warning: Windows specific
       const rows = result.split('\r\n');
+
       const names = rows.filter((row, i) => i % 2 === 0);
       const scores = rows.filter((row, i) => i % 2 !== 0);
 

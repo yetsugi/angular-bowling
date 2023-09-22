@@ -22,7 +22,7 @@ export class AppComponent {
     if (files.length !== 0) {
       this.scoresCalculatingService.calculateScores(files[0]);
     } else {
-      this.scoresCalculatingService.clearScores();
+      this.scoresCalculatingService.clearPlayers();
       this.scoresCalculatingService.clearErrorMsg();
     }
   }
